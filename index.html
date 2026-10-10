@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#5b3b73">
+<title>新世界狂歡｜活動計算機</title>
+<style>
+:root{--bg:#f7f3fa;--card:#fff;--ink:#30253a;--muted:#776b80;--accent:#79549b;--accent2:#e8d9f4;--line:#e6dceb;--good:#237b62;--warn:#a56819}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#eee4f6 0,#faf8fc 260px);font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;color:var(--ink)}
+header{padding:25px 16px 22px;text-align:center;color:#fff;background:linear-gradient(120deg,#49305f,#8a65a8)}header h1{margin:0;font-size:clamp(1.4rem,4vw,2rem)}header p{margin:8px 0 0;opacity:.9;font-size:.92rem}
+main{max-width:1050px;margin:18px auto;padding:0 14px 42px}.notice{font-size:.86rem;color:#6c557b;background:#f1e8f7;border:1px solid #dfcfe9;border-radius:12px;padding:12px 14px;margin-bottom:14px}
+.tabs{display:flex;gap:8px;overflow:auto;padding:3px 0 12px}.tab{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 14px;border-radius:999px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--accent);color:white;border-color:var(--accent)}
+.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:0 4px 16px #4e32600a;margin-bottom:14px}.card h2{font-size:1.08rem;margin:0 0 14px}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}label{font-size:.85rem;color:var(--muted)}input,select,textarea{width:100%;border:1px solid #d8cddd;border-radius:9px;padding:10px 11px;font:inherit;color:var(--ink);background:#fff;min-width:0}input:focus,select:focus{outline:2px solid #c8a8df;border-color:var(--accent)}button{font:inherit;cursor:pointer}.btn{border:0;border-radius:10px;padding:10px 14px;background:var(--accent);color:white}.btn.secondary{background:#eee5f4;color:#4e3565}.btn.danger{background:#f8e7e7;color:#963e3e}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.stat{background:#faf7fc;border:1px solid var(--line);padding:13px;border-radius:12px;min-width:0}.stat small{display:block;color:var(--muted);font-size:.78rem}.stat strong{display:block;font-size:1.25rem;margin-top:5px;overflow-wrap:anywhere}.progress{height:10px;background:#eee5f4;border-radius:99px;overflow:hidden;margin:10px 0}.progress span{height:100%;display:block;background:linear-gradient(90deg,#7c57a0,#d5a7ee);width:0%}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:.88rem}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--muted);font-weight:600}td input{min-width:75px;padding:7px}.muted{color:var(--muted);font-size:.85rem}.badge{display:inline-block;background:#eee4f6;color:#674b7e;border-radius:7px;padding:3px 7px;font-size:.75rem}.status{color:var(--good);font-weight:600}.hidden{display:none!important}footer{text-align:center;color:var(--muted);font-size:.8rem;padding:16px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.fields{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.stat:last-child{grid-column:1/-1}.card{padding:14px}header{padding:22px 12px}}
+</style>
+</head>
+<body>
+<header><h1>✦ 新世界狂歡・活動計算機 ✦</h1><p>活動積分｜體力規劃｜每日進度｜加成與獎勵</p></header>
+<main>
+<div class="notice"><b>資料提醒：</b>目前活動預設為「虛擬性悖論」。遊戲關卡積分、體力、獎勵門檻請依遊戲內資料填入；本工具不會把未核實數值當成官方資料。你的修改會自動保存在此裝置的瀏覽器。</div>
+<div class="tabs">
+<button class="tab active" data-tab="calc">活動計算</button><button class="tab" data-tab="stages">關卡與加成</button><button class="tab" data-tab="rewards">獎勵門檻</button><button class="tab" data-tab="activities">活動管理</button>
+</div>
+<section id="calc" class="panel active">
+<div class="card"><h2>目前活動與目標</h2><div class="fields">
+<div class="field full"><label>選擇活動</label><select id="activitySelect"></select></div>
+<div class="field"><label>活動開始日期</label><input id="startDate" type="date"></div><div class="field"><label>活動結束日期</label><input id="endDate" type="date"></div>
+<div class="field"><label>目前活動積分</label><input id="currentPoints" type="number" min="0" value="0"></div><div class="field"><label>目標活動積分</label><input id="targetPoints" type="number" min="0" value="100000"></div>
+<div class="field"><label>每日可用體力</label><input id="dailyEnergy" type="number" min="0" value="120"></div><div class="field"><label>目前持有體力／回復道具折算</label><input id="ownedEnergy" type="number" min="0" value="0"></div>
+<div class="field"><label>已預計取得的活動積分</label><input id="bonusPoints" type="number" min="0" value="0"></div><div class="field"><label>每天預計登入／刷關天數</label><input id="plannedDays" type="number" min="0" value="0" placeholder="0＝自動計算"></div>
+</div><div class="actions"><button class="btn" id="calculate">重新計算</button><button class="btn secondary" id="resetCalc">重設計算欄位</button></div></div>
+<div class="card"><h2>計算結果</h2><div class="stats">
+<div class="stat"><small>距離目標還差</small><strong id="remain">100,000</strong></div><div class="stat"><small>剩餘活動天數（含今天）</small><strong id="days">—</strong></div><div class="stat"><small>每日需取得積分</small><strong id="perDay">—</strong></div>
+<div class="stat"><small>建議刷關次數</small><strong id="runs">—</strong></div><div class="stat"><small>預估所需總體力</small><strong id="energyNeed">—</strong></div><div class="stat"><small>每日平均所需體力</small><strong id="energyDay">—</strong></div>
+</div><div class="progress"><span id="progressBar"></span></div><div id="progressText" class="muted">目標完成度：0%</div><p id="resultNote" class="muted"></p></div>
+<div class="card"><h2>每日進度紀錄</h2><p class="muted">輸入每天實際增加的積分，系統會更新目前積分與完成度。資料保存在本機。</p><div class="fields"><div class="field"><label>日期</label><input id="logDate" type="date"></div><div class="field"><label>今日增加積分</label><input id="logPoints" type="number" min="0" value="0"></div></div><div class="actions"><button class="btn" id="addLog">記錄今日進度</button></div><div id="logs" class="tablewrap"></div></div>
+</section>
+<section id="stages" class="panel">
+<div class="card"><h2>關卡設定</h2><p class="muted">請按遊戲內實際關卡資料修改。活動加成以百分比輸入，例如 20 代表 +20%。計算採用基礎積分 ×（1＋加成百分比）。</p>
+<div class="tablewrap"><table id="stageTable"><thead><tr><th>關卡名稱</th><th>每次體力</th><th>基礎積分</th><th>加成%</th><th>每次積分</th><th></th></tr></thead><tbody></tbody></table></div><div class="actions"><button class="btn" id="addStage">＋新增關卡</button><button class="btn secondary" id="saveStages">儲存關卡設定</button></div></div>
+<div class="card"><h2>活動加成角色／道具</h2><p class="muted">可將角色或加成來源記錄在這裡；請自行確認遊戲內加成數值，再填入關卡設定。</p><div class="fields"><div class="field"><label>加成來源名稱</label><input id="boostName" placeholder="例如：活動加成角色"></div><div class="field"><label>加成百分比</label><input id="boostValue" type="number" min="0" value="0"></div></div><div class="actions"><button class="btn" id="addBoost">新增加成來源</button></div><div id="boostList"></div></div>
+</section>
+<section id="rewards" class="panel">
+<div class="card"><h2>活動獎勵門檻</h2><p class="muted">輸入遊戲內各獎勵所需積分，可用來檢查距離下一個獎勵還差多少。</p><div class="tablewrap"><table id="rewardTable"><thead><tr><th>獎勵名稱</th><th>所需積分</th><th>狀態</th><th></th></tr></thead><tbody></tbody></table></div><div class="actions"><button class="btn" id="addReward">＋新增獎勵</button><button class="btn secondary" id="saveRewards">儲存獎勵</button></div><div id="nextReward" class="notice"></div></div>
+</section>
+<section id="activities" class="panel">
+<div class="card"><h2>活動管理</h2><p class="muted">可以新增其他活動或複製目前活動設定。活動資料只存在這個瀏覽器；換手機或清除瀏覽器資料前，請先匯出備份。</p><div class="fields"><div class="field full"><label>活動名稱</label><input id="newActivityName" placeholder="輸入活動名稱"></div><div class="field"><label>開始日期</label><input id="newStart" type="date"></div><div class="field"><label>結束日期</label><input id="newEnd" type="date"></div></div><div class="actions"><button class="btn" id="createActivity">新增活動</button><button class="btn secondary" id="renameActivity">修改目前活動名稱</button><button class="btn danger" id="deleteActivity">刪除目前活動</button></div></div>
+<div class="card"><h2>備份與還原</h2><div class="actions"><button class="btn" id="exportData">匯出 JSON 備份</button><label class="btn secondary" for="importFile">匯入備份</label><input class="hidden" id="importFile" type="file" accept=".json,application/json"><button class="btn secondary" id="resetAll">恢復初始範例資料</button></div><p class="muted">匯出檔可保存所有活動、關卡、加成、獎勵及進度紀錄。</p></div>
+</section>
+<footer>粉絲自製工具，非官方產品。活動資料請以遊戲內公告為準。</footer>
+</main>
+<script>
+const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const initial={selected:"virtual",activities:[{id:"virtual",name:"虛擬性悖論",start:"2026-10-01",end:"2026-11-05",current:0,target:100000,dailyEnergy:120,ownedEnergy:0,bonusPoints:0,plannedDays:0,stages:[{name:"活動關卡（請填入）",energy:20,points:100,bonus:0}],rewards:[{name:"活動獎勵（請填入）",points:10000}],boosts:[],logs:[]},{id:"custom",name:"自訂活動範本",start:today(),end:today(),current:0,target:100000,dailyEnergy:120,ownedEnergy:0,bonusPoints:0,plannedDays:0,stages:[{name:"活動關卡",energy:20,points:100,bonus:0}],rewards:[],boosts:[],logs:[]}]};
+let data;try{data=JSON.parse(localStorage.getItem("nucarnivalCalcV1"))||structuredClone(initial)}catch(e){data=JSON.parse(JSON.stringify(initial))}
+const $=id=>document.getElementById(id),num=v=>Math.max(0,Number(v)||0),fmt=v=>Math.ceil(v).toLocaleString("zh-TW");
+function save(){localStorage.setItem("nucarnivalCalcV1",JSON.stringify(data))}
+function act(){return data.activities.find(a=>a.id===data.selected)||data.activities[0]}
+function selectActivity(){ $("activitySelect").innerHTML=data.activities.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join("");$("activitySelect").value=data.selected}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function syncForm(){let a=act();selectActivity();["startDate","endDate","currentPoints","targetPoints","dailyEnergy","ownedEnergy","bonusPoints","plannedDays"].forEach((id,i)=>$(id).value=[a.start,a.end,a.current,a.target,a.dailyEnergy,a.ownedEnergy,a.bonusPoints,a.plannedDays][i]);$("logDate").value=today();renderStages();renderRewards();renderBoosts();renderLogs();calculate()}
+function bindForm(){let a=act();a.start=$("startDate").value;a.end=$("endDate").value;a.current=num($("currentPoints").value);a.target=num($("targetPoints").value);a.dailyEnergy=num($("dailyEnergy").value);a.ownedEnergy=num($("ownedEnergy").value);a.bonusPoints=num($("bonusPoints").value);a.plannedDays=num($("plannedDays").value);save()}
+function calculate(){bindForm();let a=act(),remain=Math.max(0,a.target-a.current-a.bonusPoints),now=new Date(today()+"T00:00:00"),end=new Date((a.end||today())+"T00:00:00"),days=Math.max(0,Math.floor((end-now)/86400000)+1),useDays=a.plannedDays||days,best=[...a.stages].map(s=>({s,points:num(s.points)*(1+num(s.bonus)/100),energy:num(s.energy)})).filter(x=>x.points>0&&x.energy>=0).sort((x,y)=>(y.points/Math.max(1,y.energy))-(x.points/Math.max(1,x.energy)))[0];let runs=best?Math.ceil(remain/best.points):0,energy=runs*(best?.energy||0),perday=useDays?Math.ceil(remain/useDays):remain,energyDay=useDays?Math.ceil(energy/useDays):energy,progress=a.target?Math.min(100,a.current/a.target*100):0;
+$("remain").textContent=fmt(remain);$("days").textContent=days;$("perDay").textContent=fmt(perday);$("runs").textContent=best?fmt(runs)+" 次":"請設定關卡";$("energyNeed").textContent=best?fmt(energy):"—";$("energyDay").textContent=best?fmt(energyDay):"—";$("progressBar").style.width=progress+"%";$("progressText").textContent=`目標完成度：${progress.toFixed(1)}%（目前積分不含預計取得積分）`;$("resultNote").textContent=best?`以「${best.s.name}」作為每體力積分效率最高的關卡估算。每日可用體力約 ${fmt(a.dailyEnergy)}，另有持有體力 ${fmt(a.ownedEnergy)}。${energy> a.ownedEnergy+a.dailyEnergy*days?"依目前設定，單靠每日體力與持有體力可能不足，請調整目標或補充資源。":"估算未計入自然回體以外的活動任務、登入獎勵及其他免費體力。"}`:"請先在「關卡與加成」設定有效的關卡積分。";renderRewards();save()}
+function renderStages(){let tb=$("stageTable").querySelector("tbody");tb.innerHTML="";act().stages.forEach((s,i)=>{let tr=document.createElement("tr");tr.innerHTML=`<td><input data-i="${i}" data-k="name" value="${esc(s.name)}"></td><td><input type="number" min="0" data-i="${i}" data-k="energy" value="${s.energy}"></td><td><input type="number" min="0" data-i="${i}" data-k="points" value="${s.points}"></td><td><input type="number" min="0" data-i="${i}" data-k="bonus" value="${s.bonus}"></td><td>${fmt(num(s.points)*(1+num(s.bonus)/100))}</td><td><button class="btn danger" data-delstage="${i}">刪除</button></td>`;tb.appendChild(tr)})}
+function renderRewards(){let a=act(),tb=$("rewardTable").querySelector("tbody");tb.innerHTML="";a.rewards.sort((x,y)=>x.points-y.points).forEach((r,i)=>{let tr=document.createElement("tr");tr.innerHTML=`<td><input data-ri="${i}" data-rk="name" value="${esc(r.name)}"></td><td><input type="number" min="0" data-ri="${i}" data-rk="points" value="${r.points}"></td><td>${a.current>=r.points?'<span class="status">已達成</span>':`還差 ${fmt(r.points-a.current)} 分`}</td><td><button class="btn danger" data-delreward="${i}">刪除</button></td>`;tb.appendChild(tr)});let next=a.rewards.filter(r=>r.points>a.current).sort((x,y)=>x.points-y.points)[0];$("nextReward").textContent=next?`下一個獎勵：${next.name}；還差 ${fmt(next.points-a.current)} 積分。`:"目前已達成所有已設定的獎勵門檻，或尚未新增獎勵。"}
+function renderBoosts(){$("boostList").innerHTML=act().boosts.map((b,i)=>`<div class="stat" style="margin-top:8px;display:flex;justify-content:space-between;align-items:center"><span>${esc(b.name)} <b>+${b.value}%</b></span><button class="btn danger" data-delboost="${i}">刪除</button></div>`).join("")||'<p class="muted">尚未新增加成來源。</p>'}
+function renderLogs(){$("logs").innerHTML=act().logs.length?`<table><thead><tr><th>日期</th><th>增加積分</th><th></th></tr></thead><tbody>${act().logs.map((l,i)=>`<tr><td>${esc(l.date)}</td><td>${fmt(l.points)}</td><td><button class="btn danger" data-dellog="${i}">撤銷</button></td></tr>`).join("")}</tbody></table>`:'<p class="muted">尚無進度紀錄。</p>'}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab,.panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");$(b.dataset.tab).classList.add("active")});
+$("activitySelect").onchange=e=>{bindForm();data.selected=e.target.value;syncForm();save()};
+["startDate","endDate","currentPoints","targetPoints","dailyEnergy","ownedEnergy","bonusPoints","plannedDays"].forEach(id=>$(id).addEventListener("change",calculate));
+$("calculate").onclick=calculate;$("resetCalc").onclick=()=>{let a=act();a.current=0;a.target=100000;a.dailyEnergy=120;a.ownedEnergy=0;a.bonusPoints=0;a.plannedDays=0;syncForm()};
+$("addStage").onclick=()=>{act().stages.push({name:"新關卡",energy:20,points:100,bonus:0});renderStages();save()};
+$("saveStages").onclick=()=>{document.querySelectorAll("#stageTable [data-i]").forEach(el=>{let s=act().stages[+el.dataset.i],k=el.dataset.k;s[k]=k==="name"?el.value:num(el.value)});renderStages();calculate()};
+$("stageTable").addEventListener("change",e=>{if(e.target.dataset.i!==undefined){let s=act().stages[+e.target.dataset.i],k=e.target.dataset.k;s[k]=k==="name"?e.target.value:num(e.target.value);save();renderStages();calculate()}});
+$("stageTable").addEventListener("click",e=>{if(e.target.dataset.delstage!==undefined){act().stages.splice(+e.target.dataset.delstage,1);renderStages();calculate()}});
+$("addReward").onclick=()=>{act().rewards.push({name:"新獎勵",points:10000});renderRewards();save()};
+$("saveRewards").onclick=()=>{document.querySelectorAll("#rewardTable [data-ri]").forEach(el=>{let r=act().rewards[+el.dataset.ri],k=el.dataset.rk;r[k]=k==="name"?el.value:num(el.value)});renderRewards();calculate()};
+$("rewardTable").addEventListener("change",e=>{if(e.target.dataset.ri!==undefined){let r=act().rewards[+e.target.dataset.ri],k=e.target.dataset.rk;r[k]=k==="name"?e.target.value:num(e.target.value);save();renderRewards()}});
+$("rewardTable").addEventListener("click",e=>{if(e.target.dataset.delreward!==undefined){act().rewards.splice(+e.target.dataset.delreward,1);renderRewards();save()}});
+$("addBoost").onclick=()=>{let name=$("boostName").value.trim();if(!name)return alert("請輸入加成來源名稱");act().boosts.push({name,value:num($("boostValue").value)});$("boostName").value="";renderBoosts();save()};
+$("boostList").addEventListener("click",e=>{if(e.target.dataset.delboost!==undefined){act().boosts.splice(+e.target.dataset.delboost,1);renderBoosts();save()}});
+$("addLog").onclick=()=>{let points=num($("logPoints").value);if(!points)return alert("請輸入大於 0 的積分");let date=$("logDate").value||today();act().logs.push({date,points});act().current+=points;syncForm();save()};
+$("logs").addEventListener("click",e=>{if(e.target.dataset.dellog!==undefined){let l=act().logs.splice(+e.target.dataset.dellog,1)[0];act().current=Math.max(0,act().current-l.points);syncForm();save()}});
+$("createActivity").onclick=()=>{let name=$("newActivityName").value.trim();if(!name)return alert("請輸入活動名稱");let a={...JSON.parse(JSON.stringify(act())),id:"a"+Date.now(),name,start:$("newStart").value||today(),end:$("newEnd").value||today(),current:0,logs:[]};data.activities.push(a);data.selected=a.id;syncForm();save();$("newActivityName").value=""};
+$("renameActivity").onclick=()=>{let n=prompt("請輸入新的活動名稱",act().name);if(n&&n.trim()){act().name=n.trim();syncForm();save()}};
+$("deleteActivity").onclick=()=>{if(data.activities.length<2)return alert("至少保留一個活動");if(confirm("確定刪除目前活動及其設定？")){data.activities=data.activities.filter(a=>a.id!==data.selected);data.selected=data.activities[0].id;syncForm();save()}};
+$("exportData").onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="nucarnival-activity-backup.json";a.click();URL.revokeObjectURL(url)};
+$("importFile").onchange=async e=>{try{let obj=JSON.parse(await e.target.files[0].text());if(!obj.activities||!Array.isArray(obj.activities))throw Error();data=obj;if(!data.activities.some(a=>a.id===data.selected))data.selected=data.activities[0].id;save();syncForm();alert("匯入成功")}catch(err){alert("匯入失敗：請選擇本計算機匯出的 JSON 檔")}};
+$("resetAll").onclick=()=>{if(confirm("確定恢復初始範例資料？目前資料會被覆蓋。")){data=JSON.parse(JSON.stringify(initial));save();syncForm()}};
+syncForm();
+</script>
+</body></html>
